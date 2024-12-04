@@ -50,10 +50,6 @@ export class CommentsService {
             order: { createdAt: 'DESC' },
         });
 
-        if (comments.length === 0) {
-            throw new NotFoundException('No comments found for this exhibit');
-        }
-
         return plainToInstance(CommentDto, comments, {
             excludeExtraneousValues: true,
         });

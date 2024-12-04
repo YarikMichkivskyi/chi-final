@@ -25,7 +25,7 @@ const createExhibit = async (exhibitData: { description: string; image: File }) 
 };
 
 const deleteExhibit = async (id: string) => {
-    return await axiosInstance.delete(`/api/exhibits/${id}`);
+    return await axiosInstance.delete(`/exhibits/${id}`);
 };
 
 export {getAllExhibits, getMyExhibits, getExhibitById, createExhibit, deleteExhibit}

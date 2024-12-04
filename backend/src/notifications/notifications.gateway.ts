@@ -28,7 +28,7 @@ export class NotificationsGateway
     }
 
     handleConnection(client: Socket) {
-        const userId = Number(client.handshake.query.userId); // Получаем ID пользователя из query параметров
+        const userId = Number(client.handshake.query.userId);
         if (userId) {
             this.clients.set(client.id, userId);
         }

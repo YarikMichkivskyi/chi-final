@@ -4,9 +4,11 @@ const url = process.env.SOCKET_SERVER_URL;
 
 let socket: Socket | null = null;
 
-export const connectToSocket = () => {
+export const connectToSocket = (userId: number): Socket => {
     if (!socket) {
-        socket = io(url);
+        socket = io(url!, {
+            query: { userId: String(userId) },
+        });
     }
     return socket;
 };

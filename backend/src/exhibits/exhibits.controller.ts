@@ -80,7 +80,7 @@ export class ExhibitsController {
             imageUrl: `/static/uploads/${image.filename}`,
         };
 
-        return this.exhibitsService.create(data, owner.id);
+        return this.exhibitsService.create(data, owner.sub);
     }
 
     @Get()

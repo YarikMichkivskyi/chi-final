@@ -4,18 +4,18 @@ import {
     ForbiddenException,
     BadRequestException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Exhibit } from './exhibits.entity';
-import { CreateExhibitDto } from './dto/create-exhibit.dto';
-import { User } from '../users/users.entity';
-import { unlink } from 'fs';
-import { promisify } from 'util';
-import { join } from 'path';
-import { NotificationsGateway } from '../notifications/notifications.gateway';
-import { ExhibitInListDto } from './dto/exhibit-in-list.dto';
-import { plainToInstance } from 'class-transformer';
-import { ExhibitDetailDto } from './dto/exhibit-detail.dto';
+import {Repository} from 'typeorm';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Exhibit} from './exhibits.entity';
+import {CreateExhibitDto} from './dto/create-exhibit.dto';
+import {User} from '../users/users.entity';
+import {unlink} from 'fs';
+import {promisify} from 'util';
+import {join} from 'path';
+import {NotificationsGateway} from '../notifications/notifications.gateway';
+import {ExhibitInListDto} from './dto/exhibit-in-list.dto';
+import {plainToInstance} from 'class-transformer';
+import {ExhibitDetailDto} from './dto/exhibit-detail.dto';
 
 const unlinkAsync = promisify(unlink);
 
@@ -27,14 +27,15 @@ export class ExhibitsService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly notificationsGateway: NotificationsGateway,
-    ) {}
+    ) {
+    }
 
     async create(
         data: CreateExhibitDto,
         ownerId: number,
     ): Promise<ExhibitDetailDto> {
         const owner = await this.userRepository.findOne({
-            where: { id: ownerId },
+            where: {id: ownerId},
         });
         if (!owner) {
             throw new NotFoundException('User not found');
@@ -51,7 +52,7 @@ export class ExhibitsService {
         this.notificationsGateway.sendNotification(ownerId);
 
         const exhibitWithRelations = await this.exhibitRepository.findOne({
-            where: { id: savedExhibit.id },
+            where: {id: savedExhibit.id},
             relations: ['owner', 'comments', 'comments.owner'],
         });
 
@@ -74,7 +75,7 @@ export class ExhibitsService {
             relations: ['owner', 'comments'],
             skip: (page - 1) * limit,
             take: limit,
-            order:{createdAt:'DESC'}
+            order: {createdAt: 'DESC'}
         });
 
         const data = plainToInstance(
@@ -83,10 +84,10 @@ export class ExhibitsService {
                 ...exhibit,
                 commentCount: exhibit.comments?.length || 0,
             })),
-            { excludeExtraneousValues: true },
+            {excludeExtraneousValues: true},
         );
 
-        return { data, total, page, lastPage: Math.ceil(total / limit) };
+        return {data, total, page, lastPage: Math.ceil(total / limit)};
     }
 
     async findByUser(
@@ -102,10 +103,10 @@ export class ExhibitsService {
     }> {
         const [result, total] = await this.exhibitRepository.findAndCount({
             relations: ['owner', 'comments'],
-            where: { ownerId: userId },
+            where: {ownerId: userId},
             skip: (page - 1) * limit,
             take: limit,
-            order:{createdAt:'DESC'}
+            order: {createdAt: 'DESC'}
         });
 
         const data = plainToInstance(
@@ -114,15 +115,15 @@ export class ExhibitsService {
                 ...exhibit,
                 commentCount: exhibit.comments?.length || 0,
             })),
-            { excludeExtraneousValues: true },
+            {excludeExtraneousValues: true},
         );
 
-        return { data, total, page, lastPage: Math.ceil(total / limit) };
+        return {data, total, page, lastPage: Math.ceil(total / limit)};
     }
 
     async findOne(id: number): Promise<ExhibitDetailDto> {
         const exhibit = await this.exhibitRepository.findOne({
-            where: { id },
+            where: {id},
             relations: ['owner', 'comments', 'comments.owner'],
         });
 
@@ -136,13 +137,13 @@ export class ExhibitsService {
                 ...exhibit,
                 commentCount: exhibit.comments?.length || 0,
             },
-            { excludeExtraneousValues: true },
+            {excludeExtraneousValues: true},
         );
     }
 
     async remove(id: number, ownerId: number): Promise<ExhibitDetailDto> {
         const exhibit = await this.exhibitRepository.findOne({
-            where: { id },
+            where: {id},
             relations: ['owner', 'comments', 'comments.owner'],
         });
 

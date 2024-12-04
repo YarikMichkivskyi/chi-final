@@ -36,9 +36,12 @@ const CommentList: React.FC<{ exhibitId: number }> = ({exhibitId}) => {
                              isOwner={comment.owner.id === id}/>
                 ))}
             </Box>
-            <Button variant="contained" color="primary" onClick={openModal}>
-                Add Comment
-            </Button>
+            {
+                Boolean(id)&&
+                <Button variant="contained" color="primary" onClick={openModal}>
+                    Add Comment
+                </Button>
+            }
             {
                 isModalOpen &&
                 <CreateCommentModal exhibitId={exhibitId} closeModal={closeModal}/>
